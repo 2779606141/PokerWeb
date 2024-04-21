@@ -11,9 +11,10 @@
               </el-icon>
               摄像头
             </template>
-            <el-menu-item index="/home/cam">Option 1</el-menu-item>
-            <el-menu-item index="/home/cam1">Option 2</el-menu-item>
-            <el-menu-item index="/home/cam2">Option 3</el-menu-item>
+            <el-menu-item index="/home/cam">记牌器</el-menu-item>
+            <el-menu-item index="/home/cam1">实时识别</el-menu-item>
+            <el-menu-item index="/home/cam2">发送帧</el-menu-item>
+            <el-menu-item index="/home/testcam">test</el-menu-item>
           </el-sub-menu>
           <el-menu-item index="/home/pic">
             <el-icon>

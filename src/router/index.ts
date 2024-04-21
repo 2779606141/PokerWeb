@@ -5,6 +5,7 @@ import Video from "../views/Home/Video.vue"
 import Camera from "@/views/Home/Camera.vue";
 import Camera1 from "@/views/Home/Camera1.vue";
 import Camera2 from "@/views/Home/Camera2.vue";
+import testCam from "@/views/Home/testCam.vue";
 
 
 const router = createRouter({
@@ -47,6 +48,11 @@ const router = createRouter({
           path:'cam2',
           name:'Cam2',
           component:Camera2
+        },
+        {
+          path:'testcam',
+          name:'Testcam',
+          component:testCam
         }
       ]
     },
@@ -57,7 +63,12 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
-    }
+    },
+    // {
+    //   path: '*',
+    //   name:'Cam2',
+    //   component:Camera2
+    // }
   ]
 })
 

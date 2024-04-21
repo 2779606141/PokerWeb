@@ -24,9 +24,9 @@ export default {
     this.socket = io('http://localhost:5000'); // 服务器地址，根据实际情况调整
     this.socket.on('connect', () => console.log('Connected to WebSocket server.'));
     this.socket.on('processed', (data) => {
-      // if(!this.processing){
-      //   return;
-      // }
+      if(!this.processing){
+        return;
+      }
       const blob = new Blob([data], { type: 'image/jpeg' });
       this.updateProcessedFrame(blob);
     });
@@ -89,8 +89,6 @@ export default {
           this.socket.emit('image', blob);
         }, 'image/webp');
         lastSentTime = now;
-
-
         if (this.processing) {
           // 检查是否还应该继续处理
           requestAnimationFrame(processFrame)
