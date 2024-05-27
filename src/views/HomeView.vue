@@ -1,58 +1,33 @@
 <template>
   <el-container class="layout-container-demo" style="height: 100%">
-    <el-aside width="200px">
-      <el-scrollbar>
-        <h5 style="text-align: center">菜单栏</h5>
-        <el-menu :default-openeds="['1', '3']" :router="true">
-          <el-sub-menu index="1">
-            <template #title>
-              <el-icon>
-                <message />
-              </el-icon>
-              摄像头
-            </template>
-            <el-menu-item index="/home/cam">记牌器</el-menu-item>
-            <el-menu-item index="/home/cam1">实时识别</el-menu-item>
-            <el-menu-item index="/home/cam2">发送帧</el-menu-item>
-            <el-menu-item index="/home/testcam">高级记牌器</el-menu-item>
-          </el-sub-menu>
-          <el-menu-item index="/home/pic">
-            <el-icon>
-              <icon-menu />
-            </el-icon>
-            <span>图片</span>
-          </el-menu-item>
-          <el-menu-item index="/home/vid">
-            <el-icon>
-              <icon-menu />
-            </el-icon>
-            <span>视频</span>
-          </el-menu-item>
-        </el-menu>
-      </el-scrollbar>
-    </el-aside>
-
     <el-container>
       <el-header style="text-align: right; font-size: 12px">
+        <el-select
+            v-model="value"
+            placeholder="选择卡牌"
+            size="large"
+            style="width: 240px"
+            @change="handleChange"
+        >
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          />
+        </el-select>
         <div class="toolbar">
-          <el-dropdown>
+          <router-link to="/home/user" style="text-decoration: none; color: inherit;">
             <el-icon style="margin-right: 8px; margin-top: 1px">
-              <setting />
+              <user />
             </el-icon>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>View</el-dropdown-item>
-                <el-dropdown-item>Add</el-dropdown-item>
-                <el-dropdown-item>Delete</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-          <span>Tom</span>
+            <span>用户中心111</span>
+          </router-link>
         </div>
       </el-header>
 
       <el-main>
-        <RouterView />
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -60,15 +35,28 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
+import { Menu as IconMenu, Message, Setting ,User} from '@element-plus/icons-vue'
 import { RouterView } from 'vue-router'
 
-const item = {
-  date: '2016-05-02',
-  name: 'Tom',
-  address: 'No. 189, Grove St, Los Angeles'
+
+const value = ref('')
+const options = [
+  {
+    value: '/home1/home',
+    label: '斗地主',
+  },
+  {
+    value: 'Option2',
+    label: '三国杀',
+  },
+]
+
+const selectedComponent = ref('')
+
+const handleChange = (val) => {
+  // 根据选择框的值设置选中的组件
+  selectedComponent.value = val
 }
-const tableData = ref(Array.from({ length: 20 }).fill(item))
 </script>
 
 <style scoped>
@@ -77,8 +65,6 @@ const tableData = ref(Array.from({ length: 20 }).fill(item))
   background-color: var(--el-color-primary-light-7);
   color: var(--el-text-color-primary);
 }
-
-
 
 .layout-container-demo .el-menu {
   border-right: none;
