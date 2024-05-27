@@ -96,19 +96,20 @@ export default {
       }
       requestAnimationFrame(processFrame)
     },
-    updateProcessedFrame(blob) {
-      const img = new Image()
-      img.onload = () => {
-        const canvas = this.$refs.processedCanvas
-        if (canvas) { // 检查canvas是否存在
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const context = canvas.getContext('2d');
-          context.drawImage(img, 0, 0);
-        }
-      }
-      img.src = URL.createObjectURL(blob); // 创建一个URL表示指定的Blob对象或File对象
+updateProcessedFrame(blob) {
+  const img = new Image();
+  img.onload = () => {
+    const canvas = this.$refs.processedCanvas; // 确保此处引用的canvas正确
+    if (canvas) {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const context = canvas.getContext('2d');
+      context.clearRect(0, 0, canvas.width, canvas.height); // 清除之前的绘图
+      context.drawImage(img, 0, 0, img.width, img.height); // 画图尺寸应与图像原始尺寸匹配
     }
+  };
+  img.src = URL.createObjectURL(blob); // 将Blob转换为URL
+}
   }
 }
 </script>
