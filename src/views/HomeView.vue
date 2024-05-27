@@ -14,7 +14,7 @@
             <el-menu-item index="/home/cam">记牌器</el-menu-item>
             <el-menu-item index="/home/cam1">实时识别</el-menu-item>
             <el-menu-item index="/home/cam2">发送帧</el-menu-item>
-            <el-menu-item index="/home/testcam">test</el-menu-item>
+            <el-menu-item index="/home/testcam">高级记牌器</el-menu-item>
           </el-sub-menu>
           <el-menu-item index="/home/pic">
             <el-icon>

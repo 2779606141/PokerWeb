@@ -2,10 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Pic from '../views/Home/Pic.vue';
 import Video from "../views/Home/Video.vue"
-import Camera from "@/views/Home/Camera.vue";
-import Camera1 from "@/views/Home/Camera1.vue";
-import Camera2 from "@/views/Home/Camera2.vue";
-import testCam from "@/views/Home/testCam.vue";
+import Jipaiqi from "@/views/Home/Jipaiqi.vue";
+import Realtime from "@/views/Home/Realtime.vue";
+import SendFrame from "@/views/Home/SendFrame.vue";
+import JipaiqiPlus from "@/views/Home/JipaiqiPlus.vue";
 
 
 const router = createRouter({
@@ -37,22 +37,22 @@ const router = createRouter({
         {
           path:'cam',
           name:'Cam',
-          component:Camera
+          component:Jipaiqi
         },
         {
           path:'cam1',
           name:'Cam1',
-          component:Camera1
+          component:Realtime
         },
         {
           path:'cam2',
           name:'Cam2',
-          component:Camera2
+          component:SendFrame
         },
         {
           path:'testcam',
           name:'Testcam',
-          component:testCam
+          component:JipaiqiPlus
         }
       ]
     },
