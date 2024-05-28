@@ -76,7 +76,7 @@ export default {
         if (!this.processing){
           return;
         }
-        if(now - lastSentTime < 1){
+        if(now - lastSentTime < 100){
           requestAnimationFrame(processFrame);
           return;
         }

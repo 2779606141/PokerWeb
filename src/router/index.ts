@@ -1,16 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import PokerView from '../views/PokerView.vue'
+import PokerView from '../views/Home/PokerView.vue'
 import HomeView from '../views/HomeView.vue'
-import Pic from '@/views/Poker/Pic.vue'
-import Video from '@/views/Poker/Video.vue'
-import Jipaiqi from '@/views/Poker/Jipaiqi.vue'
-import Realtime from '@/views/Poker/Realtime.vue'
-import SendFrame from '@/views/Poker/SendFrame.vue'
-import JipaiqiPlus from '@/views/Poker/JipaiqiPlus.vue'
+import Pic from '@/views/Home/Poker/Pic.vue'
+import Video from '@/views/Home/Poker/Video.vue'
+import Jipaiqi from '@/views/Home/Poker/Jipaiqi.vue'
+import Realtime from '@/views/Home/Poker/Realtime.vue'
+import SendFrame from '@/views/Home/Poker/SendFrame.vue'
+import JipaiqiPlus from '@/views/Home/Poker/JipaiqiPlus.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
 import ForgetPassword from '@/views/ForgetPassword.vue'
-import User from '@/views/Poker/User.vue'
+import User from '@/views/Home/User/UserInfo.vue'
+import Pic_SGS from '@/views/Home/SGS/Pic.vue'
+import Video_SGS from '@/views/Home/SGS/Video.vue'
+import Realtime_SGS from '@/views/Home/SGS/Realtime.vue'
+import SendFrame_SGS from '@/views/Home/SGS/SendFrame.vue'
+import SGSView from "@/views/Home/SGSView.vue";
+import ChangePassword from "@/views/Home/User/ChangePassword.vue";
+import UserView from "@/views/Home/UserView.vue";
+import UserInfo from "@/views/Home/User/UserInfo.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +47,7 @@ const router = createRouter({
       path: '/home',
       name: 'home',
       component: HomeView,
+      meta: { requiresAuth: true },
       children: [
         {
           path: '', // 子路由的路径为空，表示默认路由
@@ -47,8 +56,23 @@ const router = createRouter({
         {
           path: 'user',
           name: 'User',
-          component: User
-        },
+          component: UserView,
+          children:[
+            {
+              path: '', // 子路由的路径为空，表示默认路由
+              redirect: '/home/user/info'
+            },
+            {
+              path:'info',
+              name:'Info',
+              component:UserInfo
+            },
+            {
+              path: 'change-password',
+              name: 'ChangePassword',
+              component: ChangePassword
+            },
+          ]        },
         {
           path: 'poker',
           name: 'poker',
@@ -60,7 +84,7 @@ const router = createRouter({
               redirect: '/home/poker/pic' // 默认路由重定向到 '/home/pic'
             },
             {
-              path: 'pic', // 子路由的完整路径为 '/home/pic'
+              path: 'pic',
               name: 'Pic',
               component: Pic
             },
@@ -75,19 +99,51 @@ const router = createRouter({
               component: Jipaiqi
             },
             {
-              path: 'cam1',
-              name: 'Cam1',
+              path: 'realtime',
+              name: 'Realtime',
               component: Realtime
             },
             {
-              path: 'cam2',
-              name: 'Cam2',
+              path: 'frame',
+              name: 'Frame',
               component: SendFrame
             },
             {
               path: 'testcam',
               name: 'Testcam',
               component: JipaiqiPlus
+            },
+          ]
+        },
+        {
+          path: 'sgs',
+          name: 'sgs',
+          component: SGSView,
+          // meta: { requiresAuth: true },
+          children: [
+            {
+              path: '', // 子路由的路径为空，表示默认路由
+              redirect: '/home/sgs/pic' // 默认路由重定向到 '/home/pic'
+            },
+            {
+              path: 'pic',
+              name: 'Pic_SGS',
+              component: Pic_SGS
+            },
+            {
+              path: 'vid',
+              name: 'Vid_SGS',
+              component: Video_SGS
+            },
+            {
+              path: 'cam1',
+              name: 'Cam1_SGS',
+              component: Realtime_SGS
+            },
+            {
+              path: 'cam2',
+              name: 'Cam2_SGS',
+              component: SendFrame_SGS
             },
           ]
         }

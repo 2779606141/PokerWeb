@@ -2,7 +2,6 @@
   <el-container class="layout-container-demo" style="height: 100%">
     <el-aside width="300px">
       <el-scrollbar>
-        <h5 style="text-align: center">菜单栏</h5>
         <el-menu :default-openeds="['1', '3']" :router="true">
           <el-sub-menu index="1">
             <template #title>
@@ -11,10 +10,8 @@
               </el-icon>
               摄像头
             </template>
-            <el-menu-item index="cam">记牌器</el-menu-item>
             <el-menu-item index="cam1">实时识别</el-menu-item>
             <el-menu-item index="cam2">发送帧</el-menu-item>
-            <el-menu-item index="testcam">高级记牌器</el-menu-item>
           </el-sub-menu>
           <el-menu-item index="pic">
             <el-icon>
@@ -57,6 +54,7 @@ import { RouterView } from 'vue-router'
 
 .layout-container-demo .el-menu {
   border-right: none;
+  background-color: #f5f5f5;
 }
 
 .layout-container-demo .el-main {
