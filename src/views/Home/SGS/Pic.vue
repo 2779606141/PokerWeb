@@ -3,7 +3,6 @@
     <h2>上传图片并检测</h2>
     <el-upload
         class="upload-demo"
-        action=""
         :show-file-list="false"
         :on-change="handleUpload"
     >

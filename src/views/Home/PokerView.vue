@@ -12,7 +12,6 @@
             </template>
             <el-menu-item index="realtime">实时识别</el-menu-item>
             <el-menu-item index="frame">发送帧</el-menu-item>
-            <el-menu-item index="game">高级记牌器</el-menu-item>
           </el-sub-menu>
           <el-menu-item index="pic">
             <el-icon>
@@ -25,6 +24,12 @@
               <film />
             </el-icon>
             <span>视频</span>
+          </el-menu-item>
+          <el-menu-item index="game">
+            <el-icon>
+              <trophy />
+            </el-icon>
+            <span>斗地主</span>
           </el-menu-item>
         </el-menu>
       </el-scrollbar>
@@ -41,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Menu as IconMenu, Message, Setting ,User,VideoCamera,PictureFilled,Film,Picture} from '@element-plus/icons-vue'
+import { Menu as IconMenu, Message, Setting ,User,VideoCamera,PictureFilled,Film,Trophy} from '@element-plus/icons-vue'
 import { RouterView } from 'vue-router'
 import Pic from "@/views/Pic.vue";
 

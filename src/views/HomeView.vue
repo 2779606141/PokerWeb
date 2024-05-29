@@ -11,20 +11,7 @@
           </router-link>
         </div>
         <div class="toolbar center">
-          <el-select
-              v-model="value"
-              placeholder="选择卡牌"
-              size="large"
-              style="width: 240px"
-              @change="handleChange"
-          >
-            <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-          </el-select>
+          {{ selectedText }}
         </div>
         <div class="toolbar right">
           <router-link to="/home/user" style="text-decoration: none; color: inherit;">
@@ -44,50 +31,44 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch} from 'vue';
 import { House, User } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import axios from "axios";
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 
 const router = useRouter();
 
-const value = ref('斗地主'); // 设置默认值为 '斗地主'
 const options = [
   {
-    value: '/home/poker',
-    label: '斗地主',
+    value: 'poker',
+    label: '扑克牌',
   },
   {
-    value: '/home/sgs',
+    value: 'sgs',
     label: '三国杀',
+  },
+  {
+    value: 'games',
+    label: '首页',
+  },
+  {
+    value: 'user',
+    label: '用户中心',
   },
 ];
 
-const handleChange = (val) => {
-  // 发送包含路由名称信息的请求
-  axios.post('http://localhost:5000/change-model', { name: val.slice(6) })
-      .then(response => {
-        // 处理响应
-        console.log(response.data.message);
-        router.push(val);
-      })
-      .catch(error => {
-        // 处理错误
-        ElMessage.error(error);
-      });
-};
+const selectedText = ref('首页'); // 默认显示扑克牌
 
-onMounted(() => {
-  // 监听路由变化，在路由变化时更新选择框的值
-  router.afterEach((to, from) => {
-    // 根据当前路由的路径找到对应的标签(label)，并设置为选择框的值
-    const option = options.find(opt => opt.value === to.path);
-    if (option) {
-      value.value = option.label;
-    }
-  });
+
+watch(() => router.currentRoute.value.path, (path) => {
+  const parentPath = path.split('/')[2]; // 获取父路由部分
+  const option = options.find(opt => opt.value === parentPath);
+  if (option) {
+    selectedText.value = option.label;
+  }
 });
+
 </script>
 
 <style scoped>

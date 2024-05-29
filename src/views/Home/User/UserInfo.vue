@@ -5,7 +5,7 @@
       <p>用户名: {{ userInfo.username }}</p>
       <p>手机号: {{ userInfo.phone }}</p>
       <p>邮箱: {{ userInfo.email }}</p>
-      <p>资产: {{ userInfo.asset }}</p>
+      <p>余额: {{ userInfo.asset }}</p>
     </div>
     <div v-else>
       <p>加载中...</p>

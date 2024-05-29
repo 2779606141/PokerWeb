@@ -77,7 +77,7 @@ export default {
     },
 
     sendFrameToServer(imageData) {
-      axios.post('http://localhost:5000/detect/cam', {
+      axios.post('http://localhost:5000/detect/image', {
         image: imageData
       })
           .then((response) => {

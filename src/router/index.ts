@@ -3,14 +3,12 @@ import PokerView from '../views/Home/PokerView.vue'
 import HomeView from '../views/HomeView.vue'
 import Pic from '@/views/Home/Poker/Pic.vue'
 import Video from '@/views/Home/Poker/Video.vue'
-import Jipaiqi from '@/views/Home/Poker/Jipaiqi.vue'
 import Realtime from '@/views/Home/Poker/Realtime.vue'
 import SendFrame from '@/views/Home/Poker/SendFrame.vue'
-import Game from '@/views/Home/Poker/Game.vue'
+import Game from '@/views/Home/Poker/DouDiZhu.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
 import ForgetPassword from '@/views/ForgetPassword.vue'
-import User from '@/views/Home/User/UserInfo.vue'
 import Pic_SGS from '@/views/Home/SGS/Pic.vue'
 import Video_SGS from '@/views/Home/SGS/Video.vue'
 import Realtime_SGS from '@/views/Home/SGS/Realtime.vue'
@@ -20,6 +18,7 @@ import ChangePassword from "@/views/Home/User/ChangePassword.vue";
 import UserView from "@/views/Home/UserView.vue";
 import UserInfo from "@/views/Home/User/UserInfo.vue";
 import Cookies from "js-cookie";
+import Games from "@/views/Home/Games.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,7 +51,12 @@ const router = createRouter({
       children: [
         {
           path: '', // 子路由的路径为空，表示默认路由
-          redirect: '/home/poker/pic' // 默认路由重定向到 '/home/pic'
+          redirect: '/home/games' // 默认路由重定向到 '/home/pic'
+        },
+        {
+          path: 'games',
+          name: 'Games',
+          component: Games,
         },
         {
           path: 'user',
