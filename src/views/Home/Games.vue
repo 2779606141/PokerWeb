@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="game-container">
     <h2>支持的游戏</h2>
     <el-row :gutter="20">
       <el-col v-for="game in games" :key="game.name" :span="6">
@@ -78,7 +78,16 @@ export default {
 </script>
 
 <style>
+.game-container {
+  padding: 100px; /* 可以根据需要调整边距大小 */
+}
+
 .el-card {
   cursor: pointer;
+}
+.el-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* 根据需要调整上方间距 */
 }
 </style>
