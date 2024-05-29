@@ -79,6 +79,7 @@ export default {
       this.pokerDeck = this.createPokerDeck()
       this.displayedResults = []
       this.currentPokerType = ''
+      this.cardsDuringTimer=[]
     },
     createPokerDeck() {
       const suits = ['黑桃', '红桃', '方块', '梅花']
@@ -117,7 +118,6 @@ export default {
     },
     checkType() {
       if (this.cardsDuringTimer.length === 1) {
-        // this.currentPokerType = this.cardsDuringTimer[0]
         return this.cardsDuringTimer[0]
       }
       const cardNumbers = this.cardsDuringTimer.map((card) => {
@@ -144,14 +144,16 @@ export default {
       mappedCards.sort((a, b) => a - b)
       const numberCounts = this.countOccurrences(mappedCards)
       if (this.cardsDuringTimer.length === 2) {
-        if (numberCounts.get(cardNumbers[0]) === 2) {
+        console.log(numberCounts.get(8));
+        console.log(cardNumbers[0]);
+        if (numberCounts.get(parseInt(cardNumbers[0], 10)) === 2) {
           return `对子：${cardNumbers[0]} ${cardNumbers[0]}`
         } else {
           return `错误: ${this.numbersToCards(mappedCards)}`
         }
       }
       if (this.cardsDuringTimer.length === 4) {
-        if (numberCounts.get(cardNumbers[0]) === 4) {
+        if (numberCounts.get(parseInt(cardNumbers[0], 10))=== 4) {
           return `炸弹：${cardNumbers[0]} ${cardNumbers[0]} ${cardNumbers[0]} ${cardNumbers[0]}`
         }
         let threeCard = this.findFirstEntry(numberCounts, (card, count) => count === 3)
@@ -173,6 +175,30 @@ export default {
             return `三${threeCard}带一对${extraCard}`
           }
         }
+        let fourCard = this.findFirstEntry(numberCounts, (card, count) => count === 4)
+        if (this.cardsDuringTimer.length === 6 && fourCard != null) {
+          const remainingCards = mappedCards.filter(card => card !== fourCard);
+          return `四${fourCard}带${remainingCards}`
+        }
+        if (this.cardsDuringTimer.length === 8 && fourCard != null){
+          // 检查剩下的牌中是否有两对
+          const remainingCounts = new Map(numberCounts);
+          remainingCounts.delete(fourCard);
+          let pairCount = 0;
+          for (const count of remainingCounts.values()) {
+            if (count === 2) {
+              pairCount++;
+            }
+          }
+          if (pairCount === 2) {
+            const remainingPairs = Array.from(remainingCounts.keys()).filter(card => remainingCounts.get(card) === 2);
+            return `四${fourCard}带两对${remainingPairs}`;
+          }
+          else{
+            return `错误: ${this.numbersToCards(mappedCards)}`
+          }
+        }
+
         //判断顺子
         if (Array.from(numberCounts.entries()).every(([_, count]) => count === 1)) {
           if (this.isConsecutive(mappedCards) && !mappedCards.includes(15)) {
