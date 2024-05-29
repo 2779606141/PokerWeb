@@ -48,6 +48,7 @@ import { ref, onMounted } from 'vue';
 import { House, User } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 const router = useRouter();
 
@@ -63,10 +64,6 @@ const options = [
   },
 ];
 
-// const handleChange = (val) => {
-//   // 根据选择器的值跳转路由
-//   router.push(val);
-// };
 const handleChange = (val) => {
   // 发送包含路由名称信息的请求
   axios.post('http://localhost:5000/change-model', { name: val.slice(6) })
@@ -77,7 +74,7 @@ const handleChange = (val) => {
       })
       .catch(error => {
         // 处理错误
-        console.error('Error:', error);
+        ElMessage.error(error);
       });
 };
 

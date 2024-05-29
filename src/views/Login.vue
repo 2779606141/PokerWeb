@@ -32,10 +32,11 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
-import axios from "axios";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export default {
   components: {
@@ -64,6 +65,16 @@ export default {
     const loginForm = ref(null);
     const router = useRouter();
 
+    onMounted(() => {
+      // 页面加载时检查 cookies
+      const remember = Cookies.get('remember') === 'true';
+      if (remember) {
+        form.username = Cookies.get('username') || '';
+        form.password = Cookies.get('password') || '';
+        form.remember = remember;
+      }
+    });
+
     const onSubmit = async () => {
       loginForm.value.validate(async (valid) => {
         if (valid) {
@@ -74,7 +85,19 @@ export default {
             });
 
             if (response.data.message === '登录成功') {
-              localStorage.setItem('token', response.data.token);
+              // 将 token 存储在 cookies 中
+              Cookies.set('token', response.data.token, { secure: true, sameSite: 'Strict' });
+
+              if (form.remember) {
+                Cookies.set('username', form.username, { expires: 7 });  // 设置7天后过期
+                Cookies.set('password', form.password, { expires: 7 });  // 设置7天后过期
+                Cookies.set('remember', 'true', { expires: 7 });  // 设置7天后过期
+              } else {
+                Cookies.remove('username');
+                Cookies.remove('password');
+                Cookies.remove('remember');
+              }
+
               ElMessage.success('登录成功！');
               await router.push('/home');
             } else {
@@ -88,8 +111,6 @@ export default {
         }
       });
     };
-
-
 
     return {
       form,

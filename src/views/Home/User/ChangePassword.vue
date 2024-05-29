@@ -31,15 +31,11 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from "axios";
-import { ElForm, ElFormItem, ElInput, ElButton, ElMessage } from 'element-plus';
+import Cookies from "js-cookie";
+import {ElMessage} from "element-plus";
+
 
 export default {
-  components: {
-    ElForm,
-    ElFormItem,
-    ElInput,
-    ElButton,
-  },
   setup() {
     const router = useRouter();
     const form = reactive({
@@ -78,13 +74,12 @@ export default {
       changePasswordForm.value.validate(async (valid) => {
         if (valid) {
           try {
-            const token = localStorage.getItem('token');
             const response = await axios.post('http://localhost:5000/user/change-password', {
               oldPassword: form.oldPassword,
               newPassword: form.newPassword,
             }, {
               headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${Cookies.get('token')}`
               }
             });
             if (response.data.message === '修改成功') {

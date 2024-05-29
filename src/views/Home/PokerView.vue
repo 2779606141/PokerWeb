@@ -6,24 +6,23 @@
           <el-sub-menu index="1">
             <template #title>
               <el-icon>
-                <message />
+                <video-camera />
               </el-icon>
               摄像头
             </template>
-            <el-menu-item index="cam">记牌器</el-menu-item>
             <el-menu-item index="realtime">实时识别</el-menu-item>
             <el-menu-item index="frame">发送帧</el-menu-item>
-            <el-menu-item index="testcam">高级记牌器</el-menu-item>
+            <el-menu-item index="game">高级记牌器</el-menu-item>
           </el-sub-menu>
           <el-menu-item index="pic">
             <el-icon>
-              <icon-menu />
+              <picture-filled/>
             </el-icon>
             <span>图片</span>
           </el-menu-item>
           <el-menu-item index="vid">
             <el-icon>
-              <icon-menu />
+              <film />
             </el-icon>
             <span>视频</span>
           </el-menu-item>
@@ -42,8 +41,9 @@
 </template>
 
 <script lang="ts" setup>
-import { Menu as IconMenu, Message, Setting ,User} from '@element-plus/icons-vue'
+import { Menu as IconMenu, Message, Setting ,User,VideoCamera,PictureFilled,Film,Picture} from '@element-plus/icons-vue'
 import { RouterView } from 'vue-router'
+import Pic from "@/views/Pic.vue";
 
 </script>
 

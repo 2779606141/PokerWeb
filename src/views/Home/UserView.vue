@@ -5,19 +5,19 @@
         <el-menu :default-openeds="['1', '3']" :router="true">
           <el-menu-item index="info">
             <el-icon>
-              <icon-menu />
+              <user />
             </el-icon>
             <span>用户信息</span>
           </el-menu-item>
           <el-menu-item index="change-password">
             <el-icon>
-              <icon-menu />
+              <key />
             </el-icon>
             <span>修改密码</span>
           </el-menu-item>
           <el-menu-item index="charge">
             <el-icon>
-              <icon-menu />
+              <money />
             </el-icon>
             <span>充值</span>
           </el-menu-item>
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Menu as IconMenu, Message, Setting ,User} from '@element-plus/icons-vue'
+import {User,Key,Money} from '@element-plus/icons-vue'
 import { RouterView } from 'vue-router'
 
 </script>

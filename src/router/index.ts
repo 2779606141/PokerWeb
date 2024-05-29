@@ -6,7 +6,7 @@ import Video from '@/views/Home/Poker/Video.vue'
 import Jipaiqi from '@/views/Home/Poker/Jipaiqi.vue'
 import Realtime from '@/views/Home/Poker/Realtime.vue'
 import SendFrame from '@/views/Home/Poker/SendFrame.vue'
-import JipaiqiPlus from '@/views/Home/Poker/JipaiqiPlus.vue'
+import Game from '@/views/Home/Poker/Game.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
 import ForgetPassword from '@/views/ForgetPassword.vue'
@@ -19,6 +19,7 @@ import SGSView from "@/views/Home/SGSView.vue";
 import ChangePassword from "@/views/Home/User/ChangePassword.vue";
 import UserView from "@/views/Home/UserView.vue";
 import UserInfo from "@/views/Home/User/UserInfo.vue";
+import Cookies from "js-cookie";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,7 +78,6 @@ const router = createRouter({
           path: 'poker',
           name: 'poker',
           component: PokerView,
-          // meta: { requiresAuth: true },
           children: [
             {
               path: '', // 子路由的路径为空，表示默认路由
@@ -94,9 +94,9 @@ const router = createRouter({
               component: Video
             },
             {
-              path: 'cam',
-              name: 'Cam',
-              component: Jipaiqi
+              path: 'game',
+              name: 'Game',
+              component: Game
             },
             {
               path: 'realtime',
@@ -107,11 +107,6 @@ const router = createRouter({
               path: 'frame',
               name: 'Frame',
               component: SendFrame
-            },
-            {
-              path: 'testcam',
-              name: 'Testcam',
-              component: JipaiqiPlus
             },
           ]
         },
@@ -171,7 +166,7 @@ router.beforeEach((to, from, next) => {
   // 检查目标路由是否需要认证
   if (to.meta.requiresAuth) {
     // 如果需要认证，则检查用户是否已经登录
-    const isAuthenticated = !!localStorage.getItem('token') /* 根据你的认证逻辑判断用户是否已登录 */
+    const isAuthenticated = !!Cookies.get('token'); /* 根据你的认证逻辑判断用户是否已登录 */
     if (isAuthenticated) {
       // 如果已经登录，则允许访问目标路由
       next()

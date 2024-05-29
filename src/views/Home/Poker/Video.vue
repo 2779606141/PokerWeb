@@ -40,7 +40,7 @@ export default {
       formData.append('video', this.videoFile)
 
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', 'http://localhost:5000/detectVideo', true)
+      xhr.open('POST', 'http://localhost:5000/detect/video', true)
       xhr.responseType = 'blob' // 设置responseType为'blob'以正确处理视频数据
 
       xhr.onload = () => {

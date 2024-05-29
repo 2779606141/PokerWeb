@@ -24,6 +24,12 @@
               v-model="form.confirmPassword"
           ></el-input>
         </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="form.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">注册</el-button>
         </el-form-item>
@@ -36,7 +42,7 @@
 import { ref, reactive } from 'vue';
 import { ElForm, ElFormItem, ElInput, ElButton, ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   components: {
@@ -49,7 +55,9 @@ export default {
     const form = reactive({
       username: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      phone: '',
+      email: ''
     });
 
     const rules = ref({
@@ -58,6 +66,16 @@ export default {
       ],
       password: [
         { required: true, message: '请输入密码', trigger: 'blur' },
+        {
+          validator: (rule, value, callback) => {
+            if (value.length >= 6) {
+              callback();
+            } else {
+              callback(new Error('密码长度至少为6位'));
+            }
+          },
+          trigger: 'blur'
+        }
       ],
       confirmPassword: [
         { required: true, message: '请确认密码', trigger: 'blur' },
@@ -72,6 +90,25 @@ export default {
           trigger: 'blur'
         }
       ],
+      phone: [
+        {
+          validator: (rule, value, callback) => {
+            if (!value || (/^\d{11}$/.test(value))) {
+              callback();
+            } else {
+              callback(new Error('手机号必须是11位数字'));
+            }
+          },
+          trigger: 'blur'
+        }
+      ],
+      email: [
+        {
+          type: 'email',
+          message: '请输入有效的邮箱地址',
+          trigger: ['blur', 'change']
+        }
+      ],
     });
 
     const registerForm = ref(null);
@@ -84,6 +121,8 @@ export default {
             const response = await axios.post('http://localhost:5000/user/register', {
               username: form.username,
               password: form.password,
+              phone: form.phone,
+              email: form.email,
             });
 
             if (response.data.message === '注册成功') {
