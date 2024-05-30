@@ -1,31 +1,37 @@
 <template>
-  <div>
+  <div class="upload-container">
     <h2>上传图片并检测</h2>
-    <el-upload
-        class="upload-demo"
-        :show-file-list="false"
-        :on-change="handleUpload"
-    >
-      <el-button type="primary">点击上传</el-button>
-    </el-upload>
-    <el-image
-        v-if="imagePreviewUrl"
-        :src="imagePreviewUrl"
-        style="max-width: 400px; max-height: 400px; margin-top: 20px;"
-    />
-    <el-button
-        type="primary"
-        @click="detect"
-        :disabled="!imagePreviewUrl"
-        style="margin-top: 20px; margin-bottom: 20px;"
-    >
-      上传并检测
-    </el-button>
-    <el-image
-        v-if="detectionImageUrl"
-        :src="detectionImageUrl"
-        style="max-width: 400px; max-height: 400px; margin-top: 20px;"
-    />
+    <div class="button-container">
+      <el-upload
+          class="upload-demo"
+          :show-file-list="false"
+          :on-change="handleUpload"
+      >
+        <el-button type="primary" class="upload-button">点击上传</el-button>
+      </el-upload>
+      <el-button
+          type="success"
+          @click="detect"
+          :disabled="!imagePreviewUrl"
+          class="detect-button"
+      >
+        上传并检测
+      </el-button>
+    </div>
+    <div class="image-container">
+      <el-image
+          v-if="imagePreviewUrl"
+          :src="imagePreviewUrl"
+          class="uploaded-image"
+
+      />
+      <el-image
+          v-if="detectionImageUrl"
+          :src="detectionImageUrl"
+          class="detection-image"
+
+      />
+    </div>
   </div>
 </template>
 
@@ -65,7 +71,36 @@ export default {
 </script>
 
 <style>
-.upload-demo {
-  display: inline-block;
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.upload-button {
+  margin-right: 20px;
+}
+
+.detect-button {
+  margin-bottom: 20px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.uploaded-image,
+.detection-image {
+  max-width: 750px;
+  max-height: 1050px;
+  margin-top: 20px;
+  margin-right: 20px;
 }
 </style>

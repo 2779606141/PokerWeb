@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <button @click="startCamera">开启摄像头</button>
-    <button @click="stopCamera">关闭摄像头</button>
-    <!-- 新增发送当前帧按钮 -->
-    <button @click="sendCurrentFrameToServer">发送当前帧</button>
-    <div style="display: flex">
+  <div class="camera-container">
+    <div class="button-container">
+      <el-button @click="startCamera" type="primary">开启摄像头</el-button>
+      <el-button @click="stopCamera" type="danger">关闭摄像头</el-button>
+      <el-button @click="sendCurrentFrameToServer" type="success">发送当前帧</el-button>
+    </div>
+    <div class="video-container">
       <video ref="videoElement" autoplay></video>
       <canvas ref="processedCanvas" style="margin-left: 30px"></canvas>
     </div>
@@ -114,3 +115,35 @@ export default {
   }
 }
 </script>
+<style scoped>
+.camera-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: inherit;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.button-container {
+  margin-bottom: 20px;
+}
+
+.video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+video, canvas {
+  max-width: 100%;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+}
+
+video {
+  margin-right: 20px;
+}
+</style>

@@ -1,36 +1,40 @@
 <template>
-  <div>
-    <button @click="startCamera">开启摄像头</button>
-    <button @click="stopCamera">关闭摄像头</button>
-    <div style="display: flex">
+  <div class="camera-container">
+    <div class="button-container">
+      <el-button @click="startCamera" type="primary">开启摄像头</el-button>
+      <el-button @click="stopCamera" type="danger">关闭摄像头</el-button>
+    </div>
+    <div class="video-container">
       <video ref="videoElement" autoplay></video>
     </div>
   </div>
-  <table>
-    <thead>
+  <div class="poker-container">
+    <table>
+      <thead>
       <tr>
         <th>黑桃</th>
         <th>红桃</th>
         <th>方块</th>
         <th>梅花</th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       <tr v-for="rank in ranks" :key="rank">
         <td v-for="suit in suits" :key="suit" :class="{ highlighted: pokerDeck[suit + rank] >= 3 }">
           {{ suit + rank }}
         </td>
       </tr>
-    </tbody>
-  </table>
-  <button @click="reCount">重新计牌</button>
-  <div>
-    当前牌型：<span ref="pokerTypeDisplay">{{ currentPokerType }}</span>
+      </tbody>
+    </table>
+    <el-button @click="reCount" type="primary">重新计牌</el-button>
+    <div class="poker-type">
+      当前牌型：<span ref="pokerTypeDisplay">{{ currentPokerType }}</span>
+    </div>
   </div>
 </template>
 
 <script>
-import { io } from 'socket.io-client'
+import {io} from 'socket.io-client'
 import {API} from "../../../../api.config.js";
 
 export default {
@@ -81,7 +85,7 @@ export default {
       this.pokerDeck = this.createPokerDeck()
       this.displayedResults = []
       this.currentPokerType = ''
-      this.cardsDuringTimer=[]
+      this.cardsDuringTimer = []
     },
     createPokerDeck() {
       const suits = ['黑桃', '红桃', '方块', '梅花']
@@ -108,7 +112,7 @@ export default {
         // 计时器结束时执行的操作
         console.log('计时器结束，cards_during_timer:', this.cardsDuringTimer)
         // this.checkType()
-        this.currentPokerType=this.checkType()
+        this.currentPokerType = this.checkType()
         this.cardsDuringTimer = [] // 清空数组，为下一次计时做准备
       }, 2000) // 设置计时器为1秒
     },
@@ -155,7 +159,7 @@ export default {
         }
       }
       if (this.cardsDuringTimer.length === 4) {
-        if (numberCounts.get(parseInt(cardNumbers[0], 10))=== 4) {
+        if (numberCounts.get(parseInt(cardNumbers[0], 10)) === 4) {
           return `炸弹：${cardNumbers[0]} ${cardNumbers[0]} ${cardNumbers[0]} ${cardNumbers[0]}`
         }
         let threeCard = this.findFirstEntry(numberCounts, (card, count) => count === 3)
@@ -182,7 +186,7 @@ export default {
           const remainingCards = mappedCards.filter(card => card !== fourCard);
           return `四${fourCard}带${remainingCards}`
         }
-        if (this.cardsDuringTimer.length === 8 && fourCard != null){
+        if (this.cardsDuringTimer.length === 8 && fourCard != null) {
           // 检查剩下的牌中是否有两对
           const remainingCounts = new Map(numberCounts);
           remainingCounts.delete(fourCard);
@@ -195,8 +199,7 @@ export default {
           if (pairCount === 2) {
             const remainingPairs = Array.from(remainingCounts.keys()).filter(card => remainingCounts.get(card) === 2);
             return `四${fourCard}带两对${remainingPairs}`;
-          }
-          else{
+          } else {
             return `错误: ${this.numbersToCards(mappedCards)}`
           }
         }
@@ -219,8 +222,8 @@ export default {
         }
         //判断飞机
         let threeCards = Array.from(numberCounts.entries())
-          .filter((entry) => entry[1] === 3)
-          .map((entry) => entry[0])
+            .filter((entry) => entry[1] === 3)
+            .map((entry) => entry[0])
         let extraCards = {}
         if (threeCards.length > 1 && mappedCards.length % 2 === 0) {
           if (mappedCards.length === 3 * threeCards.length) {
@@ -296,10 +299,13 @@ export default {
     async startCamera() {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
-          const constraints = { video: true }
+          const constraints = {video: true}
           this.stream = await navigator.mediaDevices.getUserMedia(constraints)
           this.$refs.videoElement.srcObject = this.stream
           this.startProcessing()
+          this.$refs.videoElement.addEventListener('loadedmetadata', () => {
+            this.$refs.videoElement.requestPictureInPicture();
+          });
         } catch (error) {
           console.error('Error accessing media devices', error)
           alert('无法访问摄像头，请检查权限设置。')
@@ -352,17 +358,60 @@ export default {
 }
 </script>
 
-<style>
-.highlighted {
-  background-color: yellow; /* 高亮显示已检测的牌 */
+<style scoped>
+.camera-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
 }
+
+.button-container {
+  margin-bottom: 20px;
+}
+
+.video-container {
+  max-width: 0;
+  max-height: 0;
+  visibility: hidden;
+}
+
+video {
+  width: 100%;
+  height: auto;
+}
+
+.poker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 table {
   border-collapse: collapse;
+  width: 80%;
+  max-width: 800px;
 }
-td,
-th {
-  border: 1px solid black;
-  padding: 5px;
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
   text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.highlighted {
+  background-color: yellow;
+}
+
+button {
+  margin-top: 10px;
+}
+
+.poker-type {
+  font-size: 24px; /* 设置字体大小为 24 像素 */
 }
 </style>
