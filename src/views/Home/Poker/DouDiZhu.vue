@@ -87,6 +87,7 @@ export default {
       this.currentPokerType = ''
       this.cardsDuringTimer = []
     },
+
     createPokerDeck() {
       const suits = ['黑桃', '红桃', '方块', '梅花']
       const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -102,6 +103,7 @@ export default {
       })
       return pokerDeck
     },
+
     startTimer() {
       // 如果计时器已经启动，则先清除
       if (this.timer) {
@@ -116,12 +118,14 @@ export default {
         this.cardsDuringTimer = [] // 清空数组，为下一次计时做准备
       }, 2000) // 设置计时器为1秒
     },
+
     countOccurrences(array) {
       return array.reduce((acc, value) => {
         acc.set(value, (acc.get(value) || 0) + 1)
         return acc
       }, new Map())
     },
+
     checkType() {
       if (this.cardsDuringTimer.length === 1) {
         return this.cardsDuringTimer[0]
@@ -147,45 +151,92 @@ export default {
             return parseInt(card, 10) // 其他情况直接转为整数
         }
       })
+
+      function charToValue(card) {
+        switch (card) {
+          case 'J':
+            return 11;
+          case 'Q':
+            return 12;
+          case 'K':
+            return 13;
+          case 'A':
+            return 14;
+          case '2':
+            return 15;
+          default:
+            return parseInt(card, 10); // 其他情况直接转为整数
+        }
+      }
+
+      function valueToChar(card) {
+        switch (card) {
+          case 11:
+            return 'J';
+          case 12:
+            return 'Q';
+          case 13:
+            return 'K';
+          case 14:
+            return 'A';
+          case 15:
+            return '2';
+          default:
+            return card.toString(); // 其他情况直接返回点数作为字符串
+        }
+      }
+
       mappedCards.sort((a, b) => a - b)
       const numberCounts = this.countOccurrences(mappedCards)
+
+      //对子
       if (this.cardsDuringTimer.length === 2) {
-        console.log(numberCounts.get(8));
-        console.log(cardNumbers[0]);
-        if (numberCounts.get(parseInt(cardNumbers[0], 10)) === 2) {
+        console.log(numberCounts.get(13));//识别 K 的时候输出 2
+        console.log(cardNumbers[0]);//K
+        if (numberCounts.get(charToValue(cardNumbers[0])) === 2) {
           return `对子：${cardNumbers[0]} ${cardNumbers[0]}`
         } else {
           return `错误: ${this.numbersToCards(mappedCards)}`
         }
       }
+
+      //炸弹或三带一
       if (this.cardsDuringTimer.length === 4) {
-        if (numberCounts.get(parseInt(cardNumbers[0], 10)) === 4) {
+        if (numberCounts.get(charToValue(cardNumbers[0])) === 4) {
           return `炸弹：${cardNumbers[0]} ${cardNumbers[0]} ${cardNumbers[0]} ${cardNumbers[0]}`
         }
         let threeCard = this.findFirstEntry(numberCounts, (card, count) => count === 3)
         if (threeCard != null) {
           let extraCard = this.findFirstEntry(numberCounts, (card, count) => count === 1)
-          return `三${threeCard}带一${extraCard}`
+          return `三${valueToChar(threeCard)}带一${extraCard}`
         } else {
           return `错误: ${this.numbersToCards(mappedCards)}`
         }
       }
+
+
       if (this.cardsDuringTimer.length > 4) {
+        // 三带二
         // 确保 cardsDuringTimer 长度为 5，即存在三带一对的情况
         let threeCard = this.findFirstEntry(numberCounts, (card, count) => count === 3)
+
         if (this.cardsDuringTimer.length === 5 && threeCard != null) {
-          if (this.findFirstEntry(numberCounts, (card, count) => count === 1) != null) {
-            return `错误: ${this.numbersToCards(mappedCards)}`
+          let extraCard = this.findFirstEntry(numberCounts, (card, count) => count === 2)
+          if (extraCard != null) {
+            return `三${valueToChar(threeCard)}带一对${valueToChar(extraCard)}`
           } else {
-            let extraCard = this.findFirstEntry(numberCounts, (card, count) => count === 2)
-            return `三${threeCard}带一对${extraCard}`
+            return `错误: ${this.numbersToCards(mappedCards)}`
           }
         }
+
+        //四带二
         let fourCard = this.findFirstEntry(numberCounts, (card, count) => count === 4)
         if (this.cardsDuringTimer.length === 6 && fourCard != null) {
           const remainingCards = mappedCards.filter(card => card !== fourCard);
-          return `四${fourCard}带${remainingCards}`
+          return `四带二 ：四${valueToChar(fourCard)}带${valueToChar(remainingCards[0]) + "," + valueToChar(remainingCards[0])}`
         }
+
+        //四带两对
         if (this.cardsDuringTimer.length === 8 && fourCard != null) {
           // 检查剩下的牌中是否有两对
           const remainingCounts = new Map(numberCounts);
@@ -212,6 +263,7 @@ export default {
             return `错误: ${this.numbersToCards(mappedCards)}`
           }
         }
+
         //判断连对
         if (Array.from(numberCounts.entries()).every(([_, count]) => count === 2)) {
           if (this.isConsecutive(mappedCards) && !mappedCards.includes(15)) {
@@ -220,32 +272,39 @@ export default {
             return `错误: ${this.numbersToCards(mappedCards)}`
           }
         }
+
         //判断飞机
         let threeCards = Array.from(numberCounts.entries())
             .filter((entry) => entry[1] === 3)
             .map((entry) => entry[0])
+            .sort((a, b) => a - b); // 按从小到大排序
+        console.log(threeCards);
         let extraCards = {}
-        if (threeCards.length > 1 && mappedCards.length % 2 === 0) {
-          if (mappedCards.length === 3 * threeCards.length) {
-            return `飞机：${this.numbersToCards(mappedCards)}`
-          } else if (mappedCards.length === 4 * threeCards.length) {
-            extraCards = mappedCards.filter((value) => !threeCards.includes(value))
-            return `飞机：${this.numbersToCards(mappedCards.filter((value) => !extraCards.includes(value)))}
-          ${this.numbersToCards(extraCards)}`
-          } else if (mappedCards.length === 5 * threeCards.length) {
-            extraCards = mappedCards.filter((value) => !threeCards.includes(value))
-            if (this.allAdjacentElementsAppearTwice(extraCards)) {
+        if (!this.isConsecutive(threeCards)) {
+          return `错误: ${this.numbersToCards(mappedCards)}`
+        } else {
+          if (threeCards.length > 1 && mappedCards.length % 2 === 0) {
+            if (mappedCards.length === 3 * threeCards.length) {
+              return `飞机：${this.numbersToCards(mappedCards)}`
+            } else if (mappedCards.length === 4 * threeCards.length) {
+              extraCards = mappedCards.filter((value) => !threeCards.includes(value))
               return `飞机：${this.numbersToCards(mappedCards.filter((value) => !extraCards.includes(value)))}
           ${this.numbersToCards(extraCards)}`
+            } else if (mappedCards.length === 5 * threeCards.length) {
+              extraCards = mappedCards.filter((value) => !threeCards.includes(value))
+              if (this.allAdjacentElementsAppearTwice(extraCards)) {
+                return `飞机：${this.numbersToCards(mappedCards.filter((value) => !extraCards.includes(value)))}
+          ${this.numbersToCards(extraCards)}`
+              }
             } else {
               return `错误: ${this.numbersToCards(mappedCards)}`
             }
           }
-        } else {
-          return `错误: ${this.numbersToCards(mappedCards)}`
         }
+
       }
     },
+
     findFirstEntry(map, predicate) {
       for (let [key, value] of map) {
         if (predicate(key, value)) {
@@ -254,6 +313,7 @@ export default {
       }
       return null
     },
+
     isConsecutive(array) {
       // 遍历数组，检查相邻元素的差值
       for (let i = 0; i < array.length - 1; i++) {
@@ -265,6 +325,7 @@ export default {
       // 如果所有相邻元素的差值都是1，则数组连续
       return true
     },
+
     allAdjacentElementsAppearTwice(arr) {
       // 假设数组是有序的，并且相同的元素是相邻的
       if (arr.length % 2 !== 0) {
@@ -353,7 +414,8 @@ export default {
         }
       }
       requestAnimationFrame(processFrame)
-    }
+    },
+
   }
 }
 </script>
