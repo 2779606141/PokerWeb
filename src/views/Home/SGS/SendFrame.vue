@@ -12,7 +12,8 @@
 </template>
 
 <script>
-import axios from 'axios'; // 引入axios
+import axios from 'axios';
+import {API} from "../../../../api.config.js"; // 引入axios
 
 export default {
   name: 'CameraComponent',
@@ -77,7 +78,7 @@ export default {
     },
 
     sendFrameToServer(imageData) {
-      axios.post('http://localhost:5000/detect/image', {
+      axios.post(API.baseUrl + '/detect/image', {
         image: imageData
       })
           .then((response) => {

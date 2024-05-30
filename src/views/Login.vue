@@ -37,6 +37,8 @@ import { ElForm, ElFormItem, ElInput, ElCheckbox, ElButton, ElMessage } from 'el
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+// import {API} from "../../api.config.js";
+import {API} from '../../api.config.js';
 
 export default {
   components: {
@@ -79,7 +81,7 @@ export default {
       loginForm.value.validate(async (valid) => {
         if (valid) {
           try {
-            const response = await axios.post('http://localhost:5000/user/login', {
+            const response = await axios.post(API.baseUrl + '/user/login', {
               username: form.username,
               password: form.password,
             });

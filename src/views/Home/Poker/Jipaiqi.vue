@@ -13,6 +13,7 @@
 
 <script>
 import { io } from 'socket.io-client'
+import {API} from "../../../../api.config.js";
 export default {
   name: 'CameraComponent',
   data() {
@@ -26,7 +27,7 @@ export default {
   },
   created() {
     this.createPokerDeck()
-    this.socket = io('http://localhost:5000') // 服务器地址，根据实际情况调整
+    this.socket = io(API.baseUrl + '') // 服务器地址，根据实际情况调整
     this.socket.on('connect', () => console.log('Connected to WebSocket server.'))
     this.socket.on('processed', (data) => {
       if (!this.processing) {

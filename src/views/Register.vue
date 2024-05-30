@@ -43,6 +43,7 @@ import { ref, reactive } from 'vue';
 import { ElForm, ElFormItem, ElInput, ElButton, ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import {API} from "../../api.config.js";
 
 export default {
   components: {
@@ -118,7 +119,7 @@ export default {
       registerForm.value.validate(async (valid) => {
         if (valid) {
           try {
-            const response = await axios.post('http://localhost:5000/user/register', {
+            const response = await axios.post(API.baseUrl + '/user/register', {
               username: form.username,
               password: form.password,
               phone: form.phone,

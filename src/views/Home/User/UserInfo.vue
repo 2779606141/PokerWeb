@@ -18,6 +18,7 @@
 import axios from 'axios';
 import Cookies from "js-cookie";
 import {ElMessage} from "element-plus";
+import {API} from "../../../../api.config.js";
 
 export default {
   data() {
@@ -33,7 +34,7 @@ export default {
     async getUserInfo() {
       try {
         // 向后端发送请求获取用户信息
-        const response = await axios.get('http://localhost:5000/user/info', {
+        const response = await axios.get(API.baseUrl + '/user/info', {
           headers: {
             Authorization: `Bearer ${Cookies.get('token')}` // 发送令牌
           }

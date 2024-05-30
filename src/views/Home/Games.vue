@@ -24,6 +24,7 @@
 <script>
 import axios from 'axios';
 import { ElMessage, ElLoading } from 'element-plus';
+import {API} from "../../../api.config.js";
 
 export default {
   data() {
@@ -40,7 +41,7 @@ export default {
   methods: {
     async fetchGames() {
       try {
-        const response = await axios.get('http://localhost:5000/getGames', {
+        const response = await axios.get(API.baseUrl + '/getGames', {
           params: {
             page: this.currentPage,
             pageSize: this.pageSize,
@@ -63,7 +64,7 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)',
       });
       try {
-        const response = await axios.post('http://localhost:5000/change-model', { name: url });
+        const response = await axios.post(API.baseUrl + '/change-model', { name: url });
         console.log(response.data.message);
         this.$router.push(url);
       } catch (error) {

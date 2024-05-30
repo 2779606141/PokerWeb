@@ -33,6 +33,7 @@ import { useRouter } from 'vue-router';
 import axios from "axios";
 import Cookies from "js-cookie";
 import {ElMessage} from "element-plus";
+import {API} from "../../../../api.config.js";
 
 
 export default {
@@ -74,7 +75,7 @@ export default {
       changePasswordForm.value.validate(async (valid) => {
         if (valid) {
           try {
-            const response = await axios.post('http://localhost:5000/user/change-password', {
+            const response = await axios.post(API.baseUrl + '/user/change-password', {
               oldPassword: form.oldPassword,
               newPassword: form.newPassword,
             }, {

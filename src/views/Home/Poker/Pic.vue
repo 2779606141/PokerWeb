@@ -32,6 +32,7 @@
 <script>
 import axios from 'axios';
 import {ElMessage} from "element-plus";
+import {API} from "../../../../api.config.js";
 
 export default {
   data() {
@@ -51,7 +52,7 @@ export default {
     },
     async detect() {
       try {
-        const response = await axios.post('http://localhost:5000/detect/image', {
+        const response = await axios.post(API.baseUrl + '/detect/image', {
           image: this.imagePreviewUrl,
         });
         this.detectionImageUrl = response.data.processedImage;
