@@ -46,9 +46,9 @@
 </template>
 
 <script lang="ts" setup>
-import { Menu as IconMenu, Message, Setting ,User,VideoCamera,PictureFilled,Film,Trophy} from '@element-plus/icons-vue'
+import { VideoCamera,PictureFilled,Film,Trophy} from '@element-plus/icons-vue'
 import { RouterView } from 'vue-router'
-import Pic from "@/views/Pic.vue";
+
 
 </script>
 

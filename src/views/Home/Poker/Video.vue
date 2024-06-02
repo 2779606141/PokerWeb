@@ -1,74 +1,97 @@
 <template>
   <div class="upload-container">
     <h2>上传视频并检测</h2>
-    <input type="file" @change="handleVideoChange" accept="video/*" style="display: none;" ref="videoInput" />
     <div class="button-container">
-      <el-button type="primary" @click="chooseVideo" class="upload-button">选择视频</el-button>
-      <el-button type="success" @click="uploadVideo" class="upload-button">上传视频</el-button>
+      <el-upload
+          class="upload-demo"
+          :show-file-list="false"
+          :on-change="handleUpload"
+          accept="video/*"
+      >
+        <el-button type="primary" class="upload-button">点击上传</el-button>
+      </el-upload>
+      <el-button
+          type="success"
+          @click="detect"
+          :disabled="!videoFile"
+          class="detect-button"
+      >
+        上传并检测
+      </el-button>
     </div>
-    <video
-        v-if="processedVideoUrl"
-        controls
-        :src="processedVideoUrl"
-        class="uploaded-video"
-    ></video>
+    <div class="video-container" v-if="videoPreviewUrl || detectionVideoUrl">
+      <video
+          v-if="videoPreviewUrl"
+          controls
+          :src="videoPreviewUrl"
+          class="uploaded-video"
+      ></video>
+      <video
+          v-if="detectionVideoUrl"
+          controls
+          :src="detectionVideoUrl"
+          class="detection-video"
+      ></video>
+    </div>
     <p v-if="uploadError" class="error-message">{{ uploadError }}</p>
   </div>
 </template>
 
 <script>
-import {API} from "../../../../api.config.js";
+import axios from 'axios';
+import {ElLoading, ElMessage} from "element-plus";
+import { API } from "../../../../api.config.js";
 
 export default {
   data() {
     return {
       videoFile: null,
-      processedVideoUrl: null,
+      videoPreviewUrl: '',
+      detectionVideoUrl: '',
       uploadError: null
-    }
+    };
   },
+
   methods: {
-    chooseVideo() {
-      this.$refs.videoInput.click();
-    },
-
-    handleVideoChange(event) {
-      this.videoFile = event.target.files[0]
-      if (this.videoFile) {
-        this.processedVideoUrl = URL.createObjectURL(this.videoFile)
+    handleUpload(event) {
+      const file = event.raw;
+      this.videoFile = file;
+      if (file) {
+        this.videoPreviewUrl = URL.createObjectURL(file);
       } else {
-        this.processedVideoUrl = null
+        this.videoPreviewUrl = '';
       }
     },
 
-    uploadVideo() {
+    async detect() {
       if (!this.videoFile) {
-        this.uploadError = '请选择一个视频文件'
-        return
+        this.uploadError = '请选择一个视频文件';
+        return;
       }
+      const loadingInstance = ElLoading.service({
+            lock: true,
+            text: '加载中',
+            background: 'rgba(0, 0, 0, 0.7)',
+          });
 
-      const formData = new FormData()
-      formData.append('video', this.videoFile)
+      const formData = new FormData();
+      formData.append('video', this.videoFile);
+      formData.append('game', 'poker');
 
-      const xhr = new XMLHttpRequest()
-      xhr.open('POST', API.baseUrl + '/detect/video', true)
-      xhr.responseType = 'blob' // 设置responseType为'blob'以正确处理视频数据
+      try {
+        const response = await axios.post(`${API.baseUrl}/detect/video`, formData, {
+          responseType: 'blob'
+        });
 
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          const blob = new Blob([xhr.response], { type: 'video/mp4' })
-          this.processedVideoUrl = URL.createObjectURL(blob)
-          this.uploadError = null
-        } else {
-          this.uploadError = '上传视频失败，请重试'
-        }
-      }
-
-      xhr.onerror = () => {
-        this.uploadError = '上传视频失败，请重试'
-      }
-
-      xhr.send(formData)
+        const blob = new Blob([response.data], { type: 'video/mp4' });
+        this.detectionVideoUrl = URL.createObjectURL(blob);
+        this.uploadError = null;
+      } catch (error) {
+        this.uploadError = '上传视频失败，请重试';
+        ElMessage.error(this.uploadError);
+      }finally {
+            loadingInstance.close();
+          }
     }
   }
 }
@@ -91,11 +114,21 @@ export default {
   margin-right: 20px;
 }
 
-.uploaded-video {
-  max-width: 450px;
-  max-height: 650px;
+.detect-button {
+  margin-bottom: 20px;
+}
+
+.video-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.uploaded-video,
+.detection-video {
+  max-width: 750px;
+  max-height: 1050px;
   margin-top: 20px;
-  margin-right: 20px;
 }
 
 .error-message {

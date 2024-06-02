@@ -62,6 +62,7 @@ export default {
       try {
         const response = await axios.post(API.baseUrl + '/detect/image', {
           image: this.imagePreviewUrl,
+          game:"poker",
         });
         this.detectionImageUrl = response.data.processedImage;
       } catch (error) {

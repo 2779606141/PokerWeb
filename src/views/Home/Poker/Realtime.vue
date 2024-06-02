@@ -95,7 +95,7 @@ export default {
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
         canvas.toBlob(blob => {
-          this.socket.emit('image', blob);
+          this.socket.emit('image', { image: blob, game: "poker" });
         }, 'image/webp');
         lastSentTime = now;
         if (this.processing) {

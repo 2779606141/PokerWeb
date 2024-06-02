@@ -80,7 +80,8 @@ export default {
 
     sendFrameToServer(imageData) {
       axios.post(API.baseUrl + '/detect/image', {
-        image: imageData
+        image: imageData,
+        game:"sgs"
       })
           .then((response) => {
             this.updateProcessedFrame(response.data.processedImage)

@@ -70,8 +70,8 @@ export default {
       try {
         const response = await axios.post(API.baseUrl + '/detect/image', {
           image: this.imagePreviewUrl,
+          game:"sgs"
         });
-
         this.detectionImageUrl = response.data.processedImage;
         this.errorMessage = ''; // 清空错误消息
       } catch (error) {
