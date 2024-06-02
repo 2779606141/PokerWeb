@@ -5,7 +5,7 @@
         <div class="toolbar left">
           <router-link to="/home" style="text-decoration: none; color: inherit;">
             <el-icon style="margin-right: 8px; margin-top: 1px">
-              <house />
+              <house/>
             </el-icon>
             <span>回到主页面</span>
           </router-link>
@@ -16,7 +16,7 @@
         <div class="toolbar right">
           <router-link to="/home/user" style="text-decoration: none; color: inherit;">
             <el-icon style="margin-right: 8px; margin-top: 1px">
-              <user />
+              <user/>
             </el-icon>
             <span>用户中心</span>
           </router-link>
@@ -31,11 +31,11 @@
 </template>
 
 <script setup>
-import { ref, watch} from 'vue';
-import { House, User } from '@element-plus/icons-vue';
-import { useRouter } from 'vue-router';
+import {ref, watch, onMounted} from 'vue';
+import {House, User} from '@element-plus/icons-vue';
+import {useRouter} from 'vue-router';
 import axios from "axios";
-import { ElMessage } from "element-plus";
+import {ElMessage} from "element-plus";
 
 const router = useRouter();
 
@@ -58,17 +58,28 @@ const options = [
   },
 ];
 
-const selectedText = ref('首页'); // 默认显示扑克牌
+const selectedText = ref('首页'); // 默认显示首页
 
-
-watch(() => router.currentRoute.value.path, (path) => {
-  const parentPath = path.split('/')[2]; // 获取父路由部分
+const updateSelectedText = (path) => {
+  const segments = path.split('/');
+  const parentPath = segments.length > 2 ? segments[2] : 'games'; // 处理路径长度问题
   const option = options.find(opt => opt.value === parentPath);
   if (option) {
     selectedText.value = option.label;
+  } else {
+    selectedText.value = '首页'; // 如果匹配不到，默认显示首页
   }
+};
+
+// 在组件挂载时更新selectedText
+onMounted(() => {
+  updateSelectedText(router.currentRoute.value.path);
 });
 
+// 监听路由变化并更新selectedText
+watch(() => router.currentRoute.value.path, (path) => {
+  updateSelectedText(path);
+});
 </script>
 
 <style scoped>
