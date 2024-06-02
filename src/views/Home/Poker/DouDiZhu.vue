@@ -220,7 +220,7 @@ export default {
         let threeCard = this.findFirstEntry(numberCounts, (card, count) => count === 3)
         if (threeCard != null) {
           let extraCard = this.findFirstEntry(numberCounts, (card, count) => count === 1)
-          return `三${valueToChar(threeCard)}带一${extraCard}`
+          return `三${valueToChar(threeCard)}带一${valueToChar(extraCard)}`
         } else {
           return `错误: ${this.numbersToCards(mappedCards)}`
         }
@@ -261,7 +261,7 @@ export default {
           }
           if (pairCount === 2) {
             const remainingPairs = Array.from(remainingCounts.keys()).filter(card => remainingCounts.get(card) === 2);
-            return `四${fourCard}带两对${remainingPairs}`;
+            return `四${fourCard}带两对${valueToChar(remainingPairs[0]) + "," + valueToChar(remainingPairs[1])}`;
           } else {
             return `错误: ${this.numbersToCards(mappedCards)}`
           }
