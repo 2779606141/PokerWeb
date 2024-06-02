@@ -24,9 +24,11 @@ export default {
       processing: false // 是否正在处理图像
     }
   },
+
   beforeUnmount(){
     this.stopCamera();
   },
+
   methods: {
     async startCamera() {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -43,6 +45,7 @@ export default {
         alert('您的浏览器不支持getUserMedia API。')
       }
     },
+
     stopCamera() {
       if (this.stream) {
         this.stream.getTracks().forEach((track) => track.stop())
@@ -50,6 +53,7 @@ export default {
       }
       this.processing = false // 停止处理图像
     },
+
     startProcessing() {
       this.processing = true;
       // 保留对视频流处理的初始化代码，但移除自动发送帧的逻辑
@@ -68,7 +72,7 @@ export default {
         canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // 注意，这里不再自动发送帧到服务器，而是等待用户点击发送按钮
+        // 等待用户点击发送按钮
         if (this.processing) {
           // 继续监控视频流，但不发送帧
           requestAnimationFrame(processFrame);
@@ -89,6 +93,7 @@ export default {
             console.error('Error sending image to server:', error)
           })
     },
+
     sendCurrentFrameToServer() {
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
@@ -101,6 +106,7 @@ export default {
       const imageData = canvas.toDataURL('image/jpeg');
       this.sendFrameToServer(imageData);
     },
+
     updateProcessedFrame(processedImage) {
       const img = new Image()
       img.onload = () => {
@@ -112,6 +118,7 @@ export default {
       }
       img.src = processedImage
     }
+
   }
 }
 </script>

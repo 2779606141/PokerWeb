@@ -24,6 +24,7 @@ export default {
       socket: null,
     }
   },
+
   created() {
     this.socket = io(API.baseUrl + ''); // 服务器地址，根据实际情况调整
     this.socket.on('connect', () => console.log('Connected to WebSocket server.'));
@@ -36,14 +37,16 @@ export default {
     });
     this.socket.binaryType = 'blob'; // 确保接收的是二进制数据
   },
+
   beforeUnmount() {
     // 当组件即将销毁时关闭WebSocket连接
     if (this.socket) {
       this.socket.close();
     }
-    // 还可以在这里关闭摄像头，如果摄像头还在运行
+    // 如果摄像头还在运行,则关闭摄像头
     this.stopCamera();
   },
+
   methods: {
     async startCamera() {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -60,6 +63,7 @@ export default {
         alert('您的浏览器不支持getUserMedia API。')
       }
     },
+
     stopCamera() {
       if (this.stream) {
         this.stream.getTracks().forEach((track) => track.stop())
@@ -67,6 +71,7 @@ export default {
       }
       this.processing = false // 停止处理图像
     },
+
     startProcessing() {
       this.processing = true
       const canvas = document.createElement('canvas')
@@ -100,6 +105,8 @@ export default {
       }
       requestAnimationFrame(processFrame)
     },
+
+
     updateProcessedFrame(blob) {
       const img = new Image();
       img.onload = () => {

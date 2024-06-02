@@ -31,6 +31,7 @@ export default {
     chooseVideo() {
       this.$refs.videoInput.click();
     },
+
     handleVideoChange(event) {
       this.videoFile = event.target.files[0]
       if (this.videoFile) {
@@ -39,6 +40,7 @@ export default {
         this.processedVideoUrl = null
       }
     },
+
     uploadVideo() {
       if (!this.videoFile) {
         this.uploadError = '请选择一个视频文件'
@@ -90,8 +92,8 @@ export default {
 }
 
 .uploaded-video {
-  max-width: 750px;
-  max-height: 1050px;
+  max-width: 450px;
+  max-height: 650px;
   margin-top: 20px;
   margin-right: 20px;
 }

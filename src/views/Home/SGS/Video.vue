@@ -1,14 +1,18 @@
 <template>
-  <div>
-    <input type="file" @change="handleVideoChange" accept="video/*" />
-    <button @click="uploadVideo">上传视频</button>
+  <div class="upload-container">
+    <h2>上传视频并检测</h2>
+    <input type="file" @change="handleVideoChange" accept="video/*" style="display: none;" ref="videoInput" />
+    <div class="button-container">
+      <el-button type="primary" @click="chooseVideo" class="upload-button">选择视频</el-button>
+      <el-button type="success" @click="uploadVideo" class="upload-button">上传视频</el-button>
+    </div>
     <video
-      v-if="processedVideoUrl"
-      controls
-      :src="processedVideoUrl"
-      style="max-width: 100%; margin-top: 20px"
+        v-if="processedVideoUrl"
+        controls
+        :src="processedVideoUrl"
+        class="uploaded-video"
     ></video>
-    <p v-if="uploadError" style="color: red">{{ uploadError }}</p>
+    <p v-if="uploadError" class="error-message">{{ uploadError }}</p>
   </div>
 </template>
 
@@ -24,6 +28,10 @@ export default {
     }
   },
   methods: {
+    chooseVideo() {
+      this.$refs.videoInput.click();
+    },
+
     handleVideoChange(event) {
       this.videoFile = event.target.files[0]
       if (this.videoFile) {
@@ -64,3 +72,33 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.upload-button {
+  margin-right: 20px;
+}
+
+.uploaded-video {
+  max-width: 750px;
+  max-height: 1050px;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+</style>

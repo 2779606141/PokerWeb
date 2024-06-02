@@ -47,6 +47,7 @@ export default {
       detectionImageUrl: ''
     };
   },
+
   methods: {
     handleUpload(event) {
       const file = event.raw;
@@ -56,6 +57,7 @@ export default {
       };
       reader.readAsDataURL(file);
     },
+
     async detect() {
       try {
         const response = await axios.post(API.baseUrl + '/detect/image', {

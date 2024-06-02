@@ -41,20 +41,21 @@ export default {
   name: 'CameraComponent',
   data() {
     return {
-      ranks: ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'],
-      suits: ['黑桃', '红桃', '方块', '梅花'],
+      ranks: ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'],//点数
+      suits: ['黑桃', '红桃', '方块', '梅花'],//花色
       stream: null, // 保存媒体流的引用
       processing: false, // 是否正在处理图像
       socket: null,
       displayedResults: [], // 用于存储已显示的识别结果
       pokerDeck: this.createPokerDeck(),
       currentPokerType: '', // 当前显示的牌型
-      timer: null, // 新增计时器变量
+      timer: null, // 计时器变量
       cardsDuringTimer: [] // 新增数组用于存储计时器期间的牌
     }
   },
+
   created() {
-    this.socket = io(API.baseUrl) // 服务器地址，根据实际情况调整
+    this.socket = io(API.baseUrl) // 服务器地址
     this.socket.on('connect', () => console.log('Connected to WebSocket server.'))
     this.socket.on('processed', (data) => {
       if (!this.processing) {
@@ -72,14 +73,16 @@ export default {
       }
     })
   },
+
   beforeUnmount() {
     // 当组件即将销毁时关闭WebSocket连接
     if (this.socket) {
       this.socket.close()
     }
-    // 还可以在这里关闭摄像头，如果摄像头还在运行
+    // 关闭摄像头，如果摄像头还在运行
     this.stopCamera()
   },
+
   methods: {
     reCount() {
       this.pokerDeck = this.createPokerDeck()
@@ -88,6 +91,7 @@ export default {
       this.cardsDuringTimer = []
     },
 
+    // 创建一副牌的map
     createPokerDeck() {
       const suits = ['黑桃', '红桃', '方块', '梅花']
       const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -119,6 +123,7 @@ export default {
       }, 2000) // 设置计时器为1秒
     },
 
+    //统计出现次数
     countOccurrences(array) {
       return array.reduce((acc, value) => {
         acc.set(value, (acc.get(value) || 0) + 1)
@@ -126,7 +131,9 @@ export default {
       }, new Map())
     },
 
+    //识别牌型
     checkType() {
+      //单张直接返回
       if (this.cardsDuringTimer.length === 1) {
         return this.cardsDuringTimer[0]
       }
@@ -134,6 +141,7 @@ export default {
         const point = card[2]
         return card.length === 4 ? '10' : point
       })
+
       // 替换牌面值并转换为数值
       const mappedCards = cardNumbers.map((card) => {
         switch (card) {
@@ -152,6 +160,7 @@ export default {
         }
       })
 
+      //字符转数值
       function charToValue(card) {
         switch (card) {
           case 'J':
@@ -169,6 +178,7 @@ export default {
         }
       }
 
+      //数值转字符
       function valueToChar(card) {
         switch (card) {
           case 11:
@@ -186,6 +196,7 @@ export default {
         }
       }
 
+      //排序
       mappedCards.sort((a, b) => a - b)
       const numberCounts = this.countOccurrences(mappedCards)
 
@@ -205,6 +216,7 @@ export default {
         if (numberCounts.get(charToValue(cardNumbers[0])) === 4) {
           return `炸弹：${cardNumbers[0]} ${cardNumbers[0]} ${cardNumbers[0]} ${cardNumbers[0]}`
         }
+        //三带一
         let threeCard = this.findFirstEntry(numberCounts, (card, count) => count === 3)
         if (threeCard != null) {
           let extraCard = this.findFirstEntry(numberCounts, (card, count) => count === 1)
@@ -299,6 +311,8 @@ export default {
             } else {
               return `错误: ${this.numbersToCards(mappedCards)}`
             }
+          } else {
+            return `错误: ${this.numbersToCards(mappedCards)}`
           }
         }
 
@@ -342,6 +356,7 @@ export default {
       // 所有相邻元素都相等，说明所有元素都出现两次
       return true
     },
+
     numbersToCards(numbers) {
       // 创建一个映射对象，用于快速查找牌面值
       const cardValues = {
@@ -357,6 +372,7 @@ export default {
         return cardValues[number] || number
       })
     },
+
     async startCamera() {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
@@ -375,6 +391,7 @@ export default {
         alert('您的浏览器不支持getUserMedia API。')
       }
     },
+
     stopCamera() {
       if (this.stream) {
         this.stream.getTracks().forEach((track) => track.stop())
@@ -382,6 +399,7 @@ export default {
       }
       this.processing = false // 停止处理图像
     },
+
     startProcessing() {
       this.processing = true
       const canvas = document.createElement('canvas')
