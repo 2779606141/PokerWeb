@@ -295,7 +295,7 @@ export default {
         if (!this.isConsecutive(threeCards)) {
           return `错误: ${this.numbersToCards(mappedCards)}`
         } else {
-          if (threeCards.length > 1 && mappedCards.length % 2 === 0) {
+          if (threeCards.length > 1 ) {
             if (mappedCards.length === 3 * threeCards.length) {
               return `飞机：${this.numbersToCards(mappedCards)}`
             } else if (mappedCards.length === 4 * threeCards.length) {
